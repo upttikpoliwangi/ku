@@ -13,7 +13,7 @@ class AddUnitToPegawai extends Migration
      */
     public function up()
     {
-        Schema::table('Pegawais', function (Blueprint $table) {
+        Schema::table('pegawais', function (Blueprint $table) {
             $table->unsignedBigInteger('unit_id')->nullable()->after('id_prodi');
 
             $table->foreign('unit_id')->references('id')->on('units')->onUpdate('CASCADE')->onDelete('CASCADE');
@@ -27,7 +27,7 @@ class AddUnitToPegawai extends Migration
      */
     public function down()
     {
-        Schema::table('Pegawais', function (Blueprint $table) {
+        Schema::table('pegawais', function (Blueprint $table) {
             $table->dropForeign(['unit_id']);
         });
     }
