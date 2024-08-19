@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 
 use Hash;
 use Auth;
+use DB;
 
 class UsersController extends Controller
 {
@@ -173,6 +174,59 @@ class UsersController extends Controller
 			return redirect()->route('home.index')->with('success_message', 'Sukses beralih user');
 		}
 		return redirect()->route('home.index')->with('warning_message', 'Gagal beralih user');
+	}
+	
+	public function personaltoken(User $user){
+		$user  =   User::where(['id' => $user->id])->first();
+        if($user){			
+			if(BCL_isExpired($user->expired_personal_token)){
+                
+                DB::table('oauth_access_tokens')->where('user_id', '=', $user->id)->where('name','=', 'UntukAksesApi-'.$user->id)->delete();
+                
+                $user->personal_token=null;
+                $user->expired_personal_token=null;
+                $user->save();
+            }
+            return view('users.personaltoken', [
+                'user' => $user,
+            ]);
+		}else{
+            return redirect()->route('users.personaltoken')
+                ->withErrors(__('User tidak ditemukan.'));
+        }
+		
+	}
+
+    public function personaltokensave(Request $request){
+        $request->validate([
+            'user_id' => 'required',
+            'expired' => 'required',
+            'Simpan' => 'required',
+        ]);
+
+		$user  =   User::where(['id' => $request->user_id])->first();
+        if($user){	
+            if($request->Simpan=="1"){
+                if($user->personal_token==null){
+                    $user->personal_token = $user->createToken('UntukAksesApi-'.$user->id,['readonly'])->accessToken;
+                }
+                $user->expired_personal_token=$request->expired;
+                $user->save();
+            }else if($request->Simpan=="2"){
+                DB::table('oauth_access_tokens')->where('user_id', '=', $user->id)->where('name','=', 'UntukAksesApi-'.$user->id)->delete();
+                
+                $user->personal_token=null;
+                $user->expired_personal_token=null;
+                $user->save();
+
+            }
+            return redirect()->route('users.personaltoken',$user->id)
+                ->withSuccess(__('User tidak ditemukan.'));
+        }else{
+            return redirect()->route('users.personaltoken')
+                ->withErrors(__('User tidak ditemukan.'));
+        }
+		
 	}
 
     /**

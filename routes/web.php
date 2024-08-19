@@ -42,6 +42,8 @@ Route::group(['namespace' => 'App\Http\Controllers\Core'], function()
 			Route::get('/{user}/tukaruser', 'UsersController@tukaruser')->name('users.tukaruser');
             Route::get('/profile', 'UsersController@editProfile')->name('users.editprofile');
             Route::patch('/{user}/updateprofile', 'UsersController@updateProfile')->name('users.updateprofile');
+			Route::get('/{user}/personaltoken', 'UsersController@personaltoken')->name('users.personaltoken');
+            Route::post('/personaltokensave', 'UsersController@personaltokensave')->name('users.personaltokensave');
         });
 		
 		Route::group(['prefix' => 'menus'], function() {

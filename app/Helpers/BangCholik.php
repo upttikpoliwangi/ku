@@ -3,6 +3,15 @@
 use App\Models\Core\Menu;
 
 
+if(!function_exists('BCL_isExpired')){
+    function BCL_isExpired($expired_date)
+    {    
+        //dd(time().">".strtotime($expired_date." 23:59:59  ")."   ".now()."  ".date_default_timezone_get());    
+        return time()>strtotime($expired_date." 23:59:59");
+    }
+
+}
+
 if(!function_exists('BCL_renderMenuItem')){
     function BCL_renderMenuItem($id, $label, $icon, $url)
     {

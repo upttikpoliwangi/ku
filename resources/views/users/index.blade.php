@@ -46,8 +46,10 @@
 									@role('admin')<a href="{{ route('users.tukaruser', $user->id) }}" class="btn btn-info btn-sm">Tukar User</a>@endrole
 								</td>
 								<td>
-									<a href="{{ route('users.edit', $user->id) }}" class="btn btn-info btn-sm">Edit</a>
-									
+									<a href="{{ route('users.edit', $user->id) }}" class="btn btn-info btn-sm">Edit</a><br><br>
+									@role('admin')
+										<a href="{{ route('users.personaltoken', $user->id) }}" class="btn btn-info btn-sm">Personal Token</a>
+									@endrole
 								</td>
 								<td>
 									{!! Form::open(['method' => 'DELETE','route' => ['users.destroy', $user->id],'style'=>'display:inline']) !!}

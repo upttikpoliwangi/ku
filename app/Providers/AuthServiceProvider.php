@@ -6,6 +6,8 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Schema;
 
+use Laravel\Passport\Passport;
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -25,6 +27,15 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+		
+		if (! $this->app->routesAreCached()) {
+            Passport::routes();
+        }
+
+		Passport::tokensCan([
+			'readonly' => 'ReadOnly',
+			'crud' => 'CRUD',
+		]);
 		
 		if (Schema::hasTable('roles')) {			
 			$roles = \Spatie\Permission\Models\Role::where('guard_name','web')->get();
