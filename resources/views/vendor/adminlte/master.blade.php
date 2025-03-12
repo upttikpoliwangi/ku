@@ -46,6 +46,7 @@
     @endif
 
     {{-- Custom Stylesheets (post AdminLTE) --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css">
     @yield('adminlte_css')
 
     {{-- Favicon --}}
