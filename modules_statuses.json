@@ -1,3 +1,8 @@
 {
-    "MasterKepegawaian": true
+    "MasterKepegawaian": true,
+    "Setting": true,
+    "RekapKehadiran": true,
+    "Kedisiplinan": true,
+    "SuratIjin": true,
+    "Pengaturan": true
 }
