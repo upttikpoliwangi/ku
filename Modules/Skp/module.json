@@ -1,0 +1,13 @@
+{
+    "name": "Skp",
+    "alias": "skp",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Skp\\Providers\\SkpServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
