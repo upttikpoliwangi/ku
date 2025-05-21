@@ -1,3 +1,10 @@
 {
-    "MasterKepegawaian": true
+    "MasterKepegawaian": true,
+    "Skp": true,
+    "PenilaianSKP": true,
+    "Penilaian": true,
+    "Perencanaan": true,
+    "Pengaturan": true,
+    "SuratTugas": true,
+    "RekapKehadiran": true
 }

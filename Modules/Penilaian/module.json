@@ -1,0 +1,14 @@
+{
+    "name": "Penilaian",
+    "alias": "penilaian",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Penilaian\\Providers\\PenilaianServiceProvider",
+        "Modules\\Penilaian\\Providers\\ViewServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Modules\Pengaturan\Entities\Pegawai;
 
 use Auth;
 
@@ -49,12 +50,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-	
+
 	public function token()
     {
         return $this->hasOne(OauthToken::class);
     }
-	
+
 	public function adminlte_image()
 	{
 		if(!\Storage::exists('/path/to/your/directory')) {
@@ -62,7 +63,7 @@ class User extends Authenticatable
 		}else{
 			return asset('storage/assets/img/avatar/'.$this->avatar);
 		}
-		
+
 	}
 
 	public function adminlte_desc()
@@ -74,22 +75,22 @@ class User extends Authenticatable
 	{
 		return 'users/profile';
 	}
-	
+
 	public function avatar(){
 		return 'avatar.jpg';
 	}
-	
+
 	public function getUnit(){
 		return $this->hasOne(Unit::class,'id','unit');
 	}
-	
+
 	public function getStaff(){
 		return $this->hasOne(Staff::class,'id','staff');
 	}
-	
+
 	public function hasRoleAktif($roleCheck){
 		$rol=$this->roles->pluck('name')->toArray();
-		
+
 		if(count($rol)<$this->role_aktif){
 			$this->role_aktif=0;
 			$this->save();
@@ -98,4 +99,8 @@ class User extends Authenticatable
 		if($rol[$this->role_aktif]==$roleCheck)return true;
 		return false;
 	}
+
+    public function pegawai(){
+        return $this->hasOne(Pegawai::class, 'username', 'username');
+    }
 }

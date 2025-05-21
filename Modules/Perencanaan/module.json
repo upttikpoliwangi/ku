@@ -1,0 +1,13 @@
+{
+    "name": "Perencanaan",
+    "alias": "perencanaan",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Perencanaan\\Providers\\PerencanaanServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
