@@ -1,3 +1,12 @@
 {
-    "MasterKepegawaian": true
+    "MasterKepegawaian": true,
+    "Pengaturan": true,
+    "Blog": true,
+    "Cuti": true,
+    "SuratTugas": true,
+    "RekapKehadiran": true,
+    "Penilaian": true,
+    "SuratIjin": true,
+    "Setting": true,
+    "Kedisiplinan": true
 }
