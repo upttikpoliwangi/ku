@@ -31,7 +31,7 @@ return [
     |
     */
 
-    'lifetime' => env('SESSION_LIFETIME', 240), //dalam menit
+    'lifetime' => env('SESSION_LIFETIME', 1440), //dalam menit
 
     'expire_on_close' => true, // jika aplikasi di tutup sesi otomatis expired
 

@@ -62,7 +62,43 @@ return [
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
-
+		
+		'sitdb' => [
+            'driver' => env('DB_CONNECTION_SIT', 'mysql'),
+            'url' => env('DATABASE_URL_SIT'),
+            'host' => env('DB_HOST_SIT', '127.0.0.1'),
+            'port' => env('DB_PORT_SIT', '3306'),
+            'database' => env('DB_DATABASE_SIT', 'forge'),
+            'username' => env('DB_USERNAME_SIT', 'forge'),
+            'password' => env('DB_PASSWORD_SIT', ''),
+            'unix_socket' => env('DB_SOCKET_SIT', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+		
+		'waboot' => [
+            'driver' => 'mysql',
+            'host' => '10.252.100.88',
+            'port' => '6969',
+            'database' => 'wabot',
+            'username' => '00080',
+            'password' => 'Makl4mp1r',
+            'unix_socket' => '',
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+        ],
+			
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

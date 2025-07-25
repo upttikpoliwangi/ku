@@ -6,9 +6,9 @@
 @stop
 
 @push('css')
-    <link rel="stylesheet" href="/assets/css/jquery.nestable.min.css">
-    <link rel="stylesheet" href="/assets/css/menu-manager.css">
-    <link rel="stylesheet" href="/assets/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="/v2/assets/css/jquery.nestable.min.css">
+    <link rel="stylesheet" href="/v2/assets/css/menu-manager.css">
+    <link rel="stylesheet" href="/v2/assets/css/bootstrap-select.min.css">
 @endpush
 
 @section('content')
@@ -48,9 +48,9 @@
 @stop
 
 @push('js')
-    <script src="/assets/js/jquery.nestable.min.js"></script>
-    <script src="/assets/js/menu-manager.js"></script>
-    <script src="/assets/js/bootstrap-select.min.js"></script>
+    <script src="/v2/assets/js/jquery.nestable.min.js"></script>
+    <script src="/v2/assets/js/menu-manager.js"></script>
+    <script src="/v2/assets/js/bootstrap-select.min.js"></script>
     <script>
          $(function () {
             //Initialize Select2 Elements

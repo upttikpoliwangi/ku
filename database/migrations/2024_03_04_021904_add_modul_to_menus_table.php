@@ -26,7 +26,7 @@ class AddModulToMenusTable extends Migration
     public function down()
     {
         Schema::table('menus', function (Blueprint $table) {
-            $table->dropColumn('avatar');
+            $table->dropColumn('modul');
         });
     }
 }

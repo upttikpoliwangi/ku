@@ -1,6 +1,6 @@
 .wrapper .content-wrapper {
     background: linear-gradient(
-        to bottom,        
+        to bottom,
         #b2ddf7 0px,
         #b2ddf7 200px,
         #eff7fc 0%,
@@ -15,7 +15,7 @@
 	background-color: #ffffff!important;
 }
 [class*=sidebar-light] .brand-link {
-    border-bottom: 1px solid #ffffff;
+    border-bottom: 0px solid #ffffff;
 }
 
 .bg-primary {
@@ -66,11 +66,11 @@
 }
 
 .sidebar-collapse .brand-link {
-    display: inline-block; 
-    position: relative; 
-    width: 50px; 
-    height: 50px; 
-    overflow: hidden; 
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
     border-top-left-radius: 50%;
     border-top-right-radius: 50%;
     border-bottom-right-radius: 50%;
@@ -88,3 +88,32 @@
 .main-footer {
     font-size: 11px;
 }
+
+.badge-sifat {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            min-width: 70px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .badge-penting-segera {
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0.7;
+            }
+        }

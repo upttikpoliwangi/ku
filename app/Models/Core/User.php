@@ -2,14 +2,18 @@
 
 namespace App\Models\Core;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Auth;
+use App\Models\Core\OauthToken;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Modules\Kepegawaian\Entities\Pegawai;
+use Modules\Jabatan\Entities\Pejabat;
 
-use Auth;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
@@ -49,20 +53,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-	
+
 	public function token()
     {
         return $this->hasOne(OauthToken::class);
     }
-	
+
 	public function adminlte_image()
 	{
-		if(!\Storage::exists('/path/to/your/directory')) {
+		if(!file_exists('storage/assets/img/avatar/'.$this->avatar)) {
 			return asset('/assets/img/avatar.png');
 		}else{
 			return asset('storage/assets/img/avatar/'.$this->avatar);
 		}
-		
+
 	}
 
 	public function adminlte_desc()
@@ -74,22 +78,26 @@ class User extends Authenticatable
 	{
 		return 'users/profile';
 	}
-	
+
 	public function avatar(){
 		return 'avatar.jpg';
 	}
-	
+
 	public function getUnit(){
 		return $this->hasOne(Unit::class,'id','unit');
 	}
-	
+
+	public function pegawai(){
+		return $this->hasOne(Pegawai::class,'username','username');
+	}
+
 	public function getStaff(){
 		return $this->hasOne(Staff::class,'id','staff');
 	}
-	
+
 	public function hasRoleAktif($roleCheck){
 		$rol=$this->roles->pluck('name')->toArray();
-		
+
 		if(count($rol)<$this->role_aktif){
 			$this->role_aktif=0;
 			$this->save();

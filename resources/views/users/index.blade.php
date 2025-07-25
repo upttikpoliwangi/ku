@@ -9,13 +9,21 @@
         <div class="card">
             <div class="card-body">
 				<h1>Users</h1>
-				<div class="lead">
-					Manage your users here.
-					<a href="{{ route('users.create') }}" class="btn btn-primary btn-sm float-right">Add new user</a>
-				</div>
-				
 				<div class="mt-2">
 					@include('layouts.partials.messages')
+				</div>
+				<div class="lead">					
+					<a href="{{ route('users.create') }}" class="btn btn-primary btn-sm float-left">Add new user</a>
+					<form method="GET" action="{{ url('/users') }}" accept-charset="UTF-8" class="form-inline my-2 my-lg-0 float-right" role="search">
+						<div class="input-group float-right">
+							<input type="text" class="form-control" name="search" placeholder="Cari User ..." value="{{ request('search') }}">
+							<span class="input-group-append">
+								<button class="btn btn-secondary" type="submit">
+									<i class="fa fa-search"></i>
+								</button>
+							</span>
+						</div>
+					</form>
 				</div>
 
 				<table class="table table-striped">

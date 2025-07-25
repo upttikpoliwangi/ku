@@ -23,9 +23,18 @@ class UsersController extends Controller
      * 
      * @return \Illuminate\Http\Response
      */
-    public function index() 
+    public function index(Request $request) 
     {
-        $users = User::latest()->paginate(50);
+        $keyword = $request->get('search');
+        $perPage = 50;
+        if (!empty($keyword)) {
+            $users = User::where('name', 'LIKE', "%$keyword%")
+                ->orWhere('nip', 'LIKE', "%$keyword%")
+				->orWhere('username', 'LIKE', "%$keyword%")
+                ->latest()->paginate($perPage);
+        } else {
+            $users = User::latest()->paginate($perPage);
+        }
 
         return view('users.index', compact('users'));
     }
@@ -168,9 +177,12 @@ class UsersController extends Controller
 	public function tukaruser(User $user){
 		$users  =   User::where(['id' => $user->id])->first();
         if($users){
+			
 			\Illuminate\Support\Facades\Session::flush();        
 			\Auth::logout();		
 			\Auth::login($user,true);
+			\Modules\Jabatan\Entities\Pejabat::cekMasaAktifJabatan();
+			
 			return redirect()->route('home.index')->with('success_message', 'Sukses beralih user');
 		}
 		return redirect()->route('home.index')->with('warning_message', 'Gagal beralih user');

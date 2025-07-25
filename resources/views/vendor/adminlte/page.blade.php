@@ -5,7 +5,7 @@
 @section('adminlte_css')
     @stack('css')
     @yield('css')
-	<link rel="stylesheet" href="/assets/css/admin_custom.css">
+	<link rel="stylesheet" href="{{ url("/assets/css/admin_custom.css") }}">
 @stop
 
 

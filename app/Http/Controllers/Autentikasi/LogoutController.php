@@ -28,7 +28,7 @@ class LogoutController extends Controller
 			if($user->status == 2){
 				return redirect('login');
 			}else{
-				return redirect('https://sso.poliwangi.ac.id/keluar');
+				return redirect('login');//return redirect('https://sso.poliwangi.ac.id/keluar');
 			}
 		}else{
 			return redirect('login');

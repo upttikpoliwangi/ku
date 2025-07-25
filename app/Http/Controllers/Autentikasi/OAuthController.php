@@ -15,6 +15,8 @@ use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
+
+
 class OAuthController extends Controller
 {
     use AuthenticatesUsers;
@@ -77,10 +79,35 @@ class OAuthController extends Controller
         if ($response->status() === 200) {
             $SSOUser = $response->json();
         } else return redirect('/');
-
-        //echo $SSOUser['unit'];
-        //echo $SSOUser['staff'];
-        $role = unserialize($SSOUser['role']);
+		
+		$role = unserialize($SSOUser['role']);
+		$users  =   User::where(['username' => $SSOUser['username']])->first();
+		
+		//=======================================================
+		//Cek jabatan Kadaluarsa //Modul Jabatan
+		\Modules\Jabatan\Entities\Pejabat::cekMasaAktifJabatan();        
+		
+		if ($users){
+			$pegawai = \Modules\Kepegawaian\Entities\Pegawai::where("username",$users->username)->first();			
+			if($pegawai){
+				
+				$pejabat = \Modules\Jabatan\Entities\Pejabat::where("pegawai_id",$pegawai->id)->where("status","=","Aktif")->first();
+				
+				if($pejabat){
+					//echo "pegwai ada";
+					$jabatan = $pejabat->jabatan;
+					if($jabatan!="" && $jabatan->role!=""){
+						if (!in_array($jabatan->role, $role)){
+							array_push($role, $jabatan->role);
+						}
+					}
+				}
+			}
+			
+		}
+		
+		//=======================================================
+		
         $perm = Permission::where('name', 'adminlte.darkmode.toggle')->orWhere('name', 'logout.perform')->orWhere('name', 'home.index')->orWhere('name', 'login.show')->pluck('id', 'id')->all();
         $admin = Permission::pluck('id', 'id')->all();
         foreach ($role as $r) {
@@ -94,12 +121,18 @@ class OAuthController extends Controller
                 $rl = Role::create(['name' => $r]);
                 $rl->syncPermissions($perm);
             }
+			if ($users) {
+				if($user->role_aktif==0){
+					$user->role_aktif=$r;
+					$user->save();
+				}
+			}
         }
         //dd($SSOUser);
 
 
 
-        $users  =   User::where(['username' => $SSOUser['username']])->first();
+        
         if ($users) {
             Auth::login($users, true);
             Session::flush();
@@ -110,9 +143,9 @@ class OAuthController extends Controller
             $users->staff = $SSOUser['staff'];
             $users->save();
 
-            \DB::table('sessions')
+            /*\DB::table('sessions')
                 ->where('user_id', $users->id)
-                ->where('id', '!=', \Session::getId())->delete();
+                ->where('id', '!=', \Session::getId())->delete();*/
 
             $users->token()->delete();
 
@@ -140,9 +173,9 @@ class OAuthController extends Controller
             \Auth::user()->syncRoles($role);
 
             //Komen Untuk Mengijinkan Login Lebih dari 1 device
-            \DB::table('sessions')
+            /*\DB::table('sessions')
                 ->where('user_id', $users->id)
-                ->where('id', '!=', \Session::getId())->delete();
+                ->where('id', '!=', \Session::getId())->delete();*/
         }
     }
 

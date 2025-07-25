@@ -349,6 +349,21 @@ return [
                 ],
             ],
         ],
+		'bootstrap4DualListbox' => [
+            'active' => false,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => '/vendor/bootstrap4-duallistbox/bootstrap-duallistbox.min.css',
+                ],
+                [
+                    'type' => 'js',
+                    'asset' => true,
+                    'location' => '/vendor/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js',
+                ],
+            ],
+        ],
         'Pace' => [
             'active' => false,
             'files' => [

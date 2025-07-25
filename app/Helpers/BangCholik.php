@@ -19,7 +19,7 @@ if(!function_exists('BCL_renderMenuItem')){
             '<div class="dd-handle dd3-handle" > Drag</div>' .
             '<div class="dd3-content"><i class="nav-icon '.$icon.'"></i>&nbsp;&nbsp;<span>' . $label . '</span>' .
             '<div class="item-edit" style="color:red;">'.
-            '<a href="/menus/'.$id.'/delete" style="color:red;">Delete</a></div><div class="item-edit">&nbsp;&nbsp;|&nbsp;&nbsp;</div><div class="item-edit"><a href="/menus/'.$id.'/edit">Edit</a></div>' .
+            '<a href="/v2/menus/'.$id.'/delete" style="color:red;">Delete</a></div><div class="item-edit">&nbsp;&nbsp;|&nbsp;&nbsp;</div><div class="item-edit"><a href="/v2/menus/'.$id.'/edit">Edit</a></div>' .
             '</div>' ;
 
     }
@@ -67,6 +67,20 @@ if(!function_exists('BCL_menuSidebar')){
     {
         $query=Menu::where('parent_id',0);
         $key_parent='bcl';
+		//echo auth()->user()->username;
+		//if(auth()->user()->username=='yogisukmawati')echo auth()->user()->username;
+		if(auth()->user()->username=='yogisukmawati'){
+			$user=auth()->user();
+			if($user->role_aktif=='0'){
+				$roles = $user->getRoleNames();
+				if (!$roles->isEmpty()) {
+					foreach ($roles as $role) {
+						$user->role_aktif = $role;
+					}
+					$user->save();
+				}
+			}
+		}
         if($query->count()>0){
             $result=$query->orderBy('urut','DESC')
                 ->get();
@@ -86,6 +100,7 @@ if(!function_exists('BCL_menuSidebar')){
                     '.$bisa.'
                 ]);'."\n";
                 //if($row->id==7)dd($addMenu);
+				
                 $squery=Menu::where('parent_id',$row->id);
                 if($squery->count()>0){
                     $sresult=$squery->orderBy('urut','ASC')

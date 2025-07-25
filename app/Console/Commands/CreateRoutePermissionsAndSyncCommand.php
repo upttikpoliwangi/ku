@@ -42,8 +42,11 @@ class CreateRoutePermissionsAndSyncCommand extends Command
     {
         $routes = Route::getRoutes()->getRoutes();
 
+		
         foreach ($routes as $route) {
+			if($route->getName()=='pmb')dd($route->getName());
             if ($route->getName() != '' && $route->getAction()['middleware']['0'] == 'web') {
+				
                 $permission = Permission::where('name', $route->getName())->first();
 
                 if (is_null($permission)) {
