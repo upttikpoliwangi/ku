@@ -32,14 +32,14 @@ class CreateAdminUserSeeder extends Seeder
 			'status' => 2
         ]);
         
-  
+
 
         $role = Role::create(['name' => 'admin']);
         
         $permissions = Permission::pluck('id','id')->all();
-   
+
         $role->syncPermissions($permissions);
-     
+    
         $user->assignRole([$role->id]);
 		
 		$permissions = Permission::where('name','adminlte.darkmode.toggle')->orWhere('name','logout.perform')->orWhere('name','home.index')->orWhere('name','login.show')->pluck('id','id')->all();
@@ -47,6 +47,18 @@ class CreateAdminUserSeeder extends Seeder
 		$role = Role::create(['name' => 'terdaftar']);
 		$role->syncPermissions($permissions);
 		$role = Role::create(['name' => 'operator']);
+		$role->syncPermissions($permissions);
+        $role = Role::create(['name' => 'admin kui']);
+		$role->syncPermissions($permissions);
+        $role = Role::create(['name' => 'pic jbi']);
+		$role->syncPermissions($permissions);
+        $role = Role::create(['name' => 'pic jper']);
+		$role->syncPermissions($permissions);
+        $role = Role::create(['name' => 'pic jtm']);
+		$role->syncPermissions($permissions);
+        $role = Role::create(['name' => 'pic js']);
+		$role->syncPermissions($permissions);
+        $role = Role::create(['name' => 'pic jpar']);
 		$role->syncPermissions($permissions);
 		
     }

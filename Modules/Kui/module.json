@@ -1,0 +1,13 @@
+{
+    "name": "Kui",
+    "alias": "kui",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Kui\\Providers\\KuiServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
