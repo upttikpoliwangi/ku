@@ -16,6 +16,6 @@ class PpidDatabaseSeeder extends Seeder
     {
         Model::unguard();
 
-        $this->call(MenuModulPpidTableSeeder::class);
+        $this->call(LandingPageMenuSeederTableSeeder::class);
     }
 }

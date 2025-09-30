@@ -20,10 +20,41 @@
             </div>
         </div>
 
+        <!-- Struktur Organisasi -->
         <div class="text-left max-w-3xl mx-auto mb-12">
             <h4 class="text-2xl font-bold text-gray-800 mb-6 text-center">Struktur Organisasi</h4>
-            <img src="{{ asset('storage/' . $profil->foto_organisasi) }}" alt="Foto Direktur"
-                class="w-180 h-96 object-cover rounded-lg mx-auto shadow-lg">
+
+            @php
+                $link = $profil->foto_organisasi;
+
+                // cek apakah link YouTube
+                if ($link) {
+                    if (Str::contains($link, 'youtube.com/watch?v=')) {
+                        $link = str_replace('watch?v=', 'embed/', $link);
+                    } elseif (Str::contains($link, 'youtu.be/')) {
+                        $link = str_replace('youtu.be/', 'youtube.com/embed/', $link);
+                    }
+                }
+
+                // cek apakah link gambar
+                $isImage = $link && preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $link);
+            @endphp
+
+            @if ($link)
+                @if ($isImage)
+                    <img src="{{ $link }}" alt="Struktur Organisasi"
+                        class="w-180 h-96 object-cover rounded-lg mx-auto shadow-lg">
+                @else
+                    <div class="w-full h-96 rounded-lg mx-auto shadow-lg">
+                        <iframe width="100%" height="100%"
+                                src="{{ $link }}"
+                                frameborder="0" allowfullscreen>
+                        </iframe>
+                    </div>
+                @endif
+            @else
+                <p class="text-center text-gray-500 italic">Belum ada media struktur organisasi.</p>
+            @endif
         </div>
 
         <div class="text-left max-w-3xl mx-auto">

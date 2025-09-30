@@ -63,7 +63,7 @@ class MenusController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'modul' => 'reqiered',
+            'modul' => 'required',
             'can' => 'required',
             'icon' => 'required',
         ]);

@@ -15,6 +15,11 @@
 </head>
 
 <body class="bg-gray-50 min-h-screen flex flex-col">
+    @php
+        if (!isset($menus)) {
+            $menus = \Modules\Ppid\Entities\Menu::getHierarchical();
+        }
+    @endphp
     @include('ppid::landing-page.components.navbar')
 
     <main class="flex-1">

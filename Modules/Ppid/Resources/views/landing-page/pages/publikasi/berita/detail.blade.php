@@ -103,7 +103,7 @@
     <section class="pb-20">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="prose prose-lg max-w-none">
-                <div class="text-gray-800 leading-relaxed space-y-6 text-justify">
+                <div class="prose prose-lg max-w-none text-gray-700 [&_ul]:list-disc [&_ul]:pl-5 [&_li]:my-2">
                     {!! $berita->deskripsi !!}
                 </div>
             </div>
@@ -170,7 +170,7 @@
                         Kembali ke Berita
                     </a>
 
-                    <div class="flex space-x-4">
+                    {{-- <div class="flex space-x-4">
                         <button
                             class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200">
                             ← Berita Sebelumnya
@@ -179,7 +179,7 @@
                             class="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200">
                             Berita Selanjutnya →
                         </button>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

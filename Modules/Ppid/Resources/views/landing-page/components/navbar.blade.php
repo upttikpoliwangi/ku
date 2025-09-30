@@ -17,171 +17,122 @@
             <!-- Desktop Navigation -->
             <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-6">
-                    <a href="{{ route('home') }}"
-                        class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('home') ? 'text-white' : 'text-gray-700 hover:text-white hover:bg-opacity-80' }}"
-                        style="{{ request()->routeIs('home') ? 'background-color: var(--primary-blue);' : '' }}"
-                        onmouseover="if(!this.classList.contains('text-white')) this.style.backgroundColor='var(--primary-blue)'"
-                        onmouseout="if(!this.classList.contains('text-white')) this.style.backgroundColor=''">
-                        Beranda
-                    </a>
+                    @foreach ($menus->where('is_active', true) as $menu)
+                        @if ($menu->has_children)
+                            <!-- Filter active children only -->
+                            @php
+                                $activeChildren = $menu->children->where('is_active', true);
+                            @endphp
 
-                    <!-- Profil Menu with Dropdown -->
-                    <div class="relative group">
-                        <a href="#"
-                            class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-700 hover:text-white hover:bg-opacity-80 flex items-center"
-                            onmouseover="this.style.backgroundColor='var(--primary-blue)'"
-                            onmouseout="this.style.backgroundColor=''">
-                            Profil
-                            <svg class="ml-1 h-4 w-4 transition-transform duration-200 group-hover:rotate-180"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </a>
+                            @if ($activeChildren->count() > 0)
+                                <!-- Menu with Dropdown -->
+                                <div class="relative group">
+                                    @php
+                                        $hasActiveChild = false;
+                                        foreach ($activeChildren as $child) {
+                                            if ($child->route_name && request()->routeIs($child->route_name)) {
+                                                $hasActiveChild = true;
+                                                break;
+                                            }
+                                        }
+                                    @endphp
+                                    <button
+                                        class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-700 hover:text-white hover:bg-opacity-80 flex items-center"
+                                        onmouseover="this.style.backgroundColor='var(--primary-blue)'"
+                                        onmouseout="this.style.backgroundColor=''">
+                                        {{ $menu->title }}
+                                        <svg class="ml-1 h-4 w-4 transition-transform duration-200 group-hover:rotate-180"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </button>
 
-                        <!-- Dropdown Menu -->
-                        <div
-                            class="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                            <div class="py-1">
-                                <a href="{{ route('publik.p.direktur.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Sambutan Direktur
-                                </a>
-                                <a href="{{ route('publik.p.profil.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Profil PPID
-                                </a>
-                                <a href="{{ route('publik.p.visi-misi.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Visi dan Misi
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                                    <!-- Dropdown Menu -->
+                                    <div
+                                        class="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                        <div class="py-1">
+                                            @foreach ($activeChildren as $child)
+                                                @php
+                                                    $isChildActive = $child->route_name
+                                                        ? request()->routeIs($child->route_name)
+                                                        : false;
+                                                    $routeExists = $child->route_name
+                                                        ? Route::has($child->route_name)
+                                                        : false;
+                                                    $childActualUrl = $routeExists ? $child->actual_url : '#';
+                                                    $childClass = $routeExists
+                                                        ? ($isChildActive
+                                                            ? ''
+                                                            : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900')
+                                                        : 'text-gray-400 cursor-not-allowed';
+                                                    $childTitle = $routeExists ? '' : 'title="Route tidak tersedia"';
+                                                    $childTag = $routeExists ? 'a' : 'span';
+                                                    $childHref = $routeExists ? "href=\"{$childActualUrl}\"" : '';
+                                                    $childOnclick = $routeExists ? '' : 'onclick="return false;"';
+                                                @endphp
 
-                    <!-- Informasi Publik Menu with Dropdown -->
-                    <div class="relative group">
-                        <a href="#"
-                            class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-700 hover:text-white hover:bg-opacity-80 flex items-center"
-                            onmouseover="this.style.backgroundColor='var(--primary-blue)'"
-                            onmouseout="this.style.backgroundColor=''">
-                            Informasi Publik
-                            <svg class="ml-1 h-4 w-4 transition-transform duration-200 group-hover:rotate-180"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </a>
+                                                <{{ $childTag }} {!! $childHref !!} {!! $childOnclick !!}
+                                                    class="block px-4 py-2 text-sm {{ $childClass }} transition-colors duration-150"
+                                                    {!! $childTitle !!}>
+                                                    {{ $child->title }}
+                                                    </{{ $childTag }}>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <!-- If parent has no active children, show as single item if it has a valid route -->
+                                @php
+                                    $isActive = $menu->route_name ? request()->routeIs($menu->route_name) : false;
+                                    $routeExists = $menu->route_name ? Route::has($menu->route_name) : false;
+                                @endphp
 
-                        <!-- Dropdown Menu -->
-                        <div
-                            class="absolute left-0 mt-2 w-64 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                            <div class="py-1">
-                                <a href="{{ route('publik.i-regulasi.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Regulasi
-                                </a>
-                                <a href="{{ route('publik.i-publik.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Daftar Informasi Publik
-                                </a>
-                                <a href="{{ route('publik.i-dikecualikan.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Informasi Publik Dikecualikan
-                                </a>
-                                <a href="{{ route('publik.i-setiap-saat.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Informasi Setiap Saat
-                                </a>
-                                <a href="{{ route('publik.i-berkala.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Informasi Berkala
-                                </a>
-                                <a href="{{ route('publik.i-serta-merta.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Informasi Serta-Merta
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                                @if ($routeExists)
+                                    <a href="{{ $menu->actual_url }}"
+                                        class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ $isActive ? 'text-white' : 'text-gray-700 hover:text-white hover:bg-opacity-80' }}"
+                                        style="{{ $isActive ? 'background-color: var(--primary-blue);' : '' }}"
+                                        onmouseover="if(!this.classList.contains('text-white')) this.style.backgroundColor='var(--primary-blue)'"
+                                        onmouseout="if(!this.classList.contains('text-white')) this.style.backgroundColor=''">
+                                        {{ $menu->title }}
+                                    </a>
+                                @else
+                                    <span
+                                        class="px-3 py-2 rounded-md text-sm font-medium text-gray-400 cursor-not-allowed"
+                                        title="Menu tidak tersedia">
+                                        {{ $menu->title }}
+                                    </span>
+                                @endif
+                            @endif
+                        @else
+                            <!-- Single Menu Item -->
+                            @php
+                                $isActive = $menu->route_name ? request()->routeIs($menu->route_name) : false;
+                                $routeExists = $menu->route_name ? Route::has($menu->route_name) : false;
+                            @endphp
 
-                    <!-- Layanan Informasi Menu with Dropdown -->
-                    <div class="relative group">
-                        <a href="#"
-                            class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-700 hover:text-white hover:bg-opacity-80 flex items-center"
-                            onmouseover="this.style.backgroundColor='var(--primary-blue)'"
-                            onmouseout="this.style.backgroundColor=''">
-                            Layanan Informasi
-                            <svg class="ml-1 h-4 w-4 transition-transform duration-200 group-hover:rotate-180"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </a>
+                            @if ($routeExists)
+                                <a href="{{ $menu->actual_url }}"
+                                    class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ $isActive ? 'text-white' : 'text-gray-700 hover:text-white hover:bg-opacity-80' }}"
+                                    style="{{ $isActive ? 'background-color: var(--primary-blue);' : '' }}"
+                                    onmouseover="if(!this.classList.contains('text-white')) this.style.backgroundColor='var(--primary-blue)'"
+                                    onmouseout="if(!this.classList.contains('text-white')) this.style.backgroundColor=''">
+                                    {{ $menu->title }}
+                                </a>
+                            @else
+                                <span class="px-3 py-2 rounded-md text-sm font-medium text-gray-400 cursor-not-allowed"
+                                    title="Menu tidak tersedia">
+                                    {{ $menu->title }}
+                                </span>
+                            @endif
+                        @endif
+                    @endforeach
 
-                        <!-- Dropdown Menu -->
-                        <div
-                            class="absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                            <div class="py-1">
-                                <a href="{{ route('publik.l-maklumat.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Maklumat Layanan
-                                </a>
-                                <a href="{{ route('publik.l-standar.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Standar Layanan
-                                </a>
-                                <a href="{{ route('publik.l-permohonan-informasi.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Prosedur Pengajuan Permohonan Informasi
-                                </a>
-                                <a href="{{ route('publik.l-permohonan-keberatan.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Prosedur Pengajuan Keberatan Informasi
-                                </a>
-                                <a href="{{ route('publik.l-permohonan-sengketa.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Prosedur Pengajuan Penyelesaian Sengketa
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Publikasi Menu with Dropdown -->
-                    <div class="relative group">
-                        <a href="#"
-                            class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-700 hover:text-white hover:bg-opacity-80 flex items-center"
-                            onmouseover="this.style.backgroundColor='var(--primary-blue)'"
-                            onmouseout="this.style.backgroundColor=''">
-                            Publikasi
-                            <svg class="ml-1 h-4 w-4 transition-transform duration-200 group-hover:rotate-180"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                        </a>
-
-                        <!-- Dropdown Menu -->
-                        <div
-                            class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                            <div class="py-1">
-                                <a href="{{ route('publikasi.berita.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Berita
-                                </a>
-                                <a href="{{ route('publikasi.pengumuman.index') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors duration-150">
-                                    Pengumuman
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
+                    <!-- Login Button (Static - keep as is) -->
                     <a href="{{ route('home.index') }}"
-                        class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('download') ? 'text-white' : 'text-gray-700 hover:text-white hover:bg-opacity-80' }}"
-                        style="{{ request()->routeIs('download') ? 'background-color: var(--primary-blue);' : '' }}"
-                        onmouseover="if(!this.classList.contains('text-white')) this.style.backgroundColor='var(--primary-blue)'"
-                        onmouseout="if(!this.classList.contains('text-white')) this.style.backgroundColor=''">
+                        class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 text-gray-700 hover:text-white hover:bg-opacity-80"
+                        onmouseover="this.style.backgroundColor='var(--primary-blue)'"
+                        onmouseout="this.style.backgroundColor=''">
                         Login
                     </a>
                 </div>
@@ -204,103 +155,104 @@
     <!-- Mobile Navigation -->
     <div class="md:hidden hidden" id="mobile-menu">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
-            <a href="{{ route('home') }}"
-                class="block px-3 py-2 rounded-md text-base font-medium {{ request()->routeIs('home') ? 'text-white' : 'text-gray-700' }}"
-                style="{{ request()->routeIs('home') ? 'background-color: var(--primary-blue);' : '' }}">
-                Beranda
-            </a>
+            @foreach ($menus->where('is_active', true) as $menu)
+                @if ($menu->has_children)
+                    <!-- Filter active children only -->
+                    @php
+                        $activeChildren = $menu->children->where('is_active', true);
+                    @endphp
 
-            <!-- Mobile Profil Menu -->
-            <div class="block">
-                <button onclick="toggleSubmenu('profil')"
-                    class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 flex items-center justify-between">
-                    Profil
-                    <svg id="profil-arrow" class="h-4 w-4 transition-transform duration-200" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                        </path>
-                    </svg>
-                </button>
-                <div id="profil-submenu" class="hidden pl-6 space-y-1">
-                    <a href="#" class="block px-3 py-2 text-sm text-gray-600">Sambutan Direktur</a>
-                    <a href="#" class="block px-3 py-2 text-sm text-gray-600">Profil PPID</a>
-                    <a href="#" class="block px-3 py-2 text-sm text-gray-600">Visi dan Misi</a>
-                </div>
-            </div>
+                    @if ($activeChildren->count() > 0)
+                        <!-- Mobile Menu with Submenu -->
+                        <div class="block">
+                            <button onclick="toggleSubmenu('{{ $menu->id }}')"
+                                class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 flex items-center justify-between">
+                                {{ $menu->title }}
+                                <svg id="{{ $menu->id }}-arrow" class="h-4 w-4 transition-transform duration-200"
+                                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7">
+                                    </path>
+                                </svg>
+                            </button>
+                            <div id="{{ $menu->id }}-submenu" class="hidden pl-6 space-y-1">
+                                @foreach ($activeChildren as $child)
+                                    @php
+                                        $routeExists = $child->route_name ? Route::has($child->route_name) : false;
+                                        $isChildActive = $child->route_name
+                                            ? request()->routeIs($child->route_name)
+                                            : false;
+                                        $childActualUrl = $routeExists ? $child->actual_url : '#';
+                                        $childClass = $routeExists
+                                            ? ($isChildActive
+                                                ? ''
+                                                : 'text-gray-600 hover:text-gray-900')
+                                            : 'text-gray-400 cursor-not-allowed';
+                                        $childTitle = $routeExists ? '' : 'title="Route tidak tersedia"';
+                                        $childTag = $routeExists ? 'a' : 'span';
+                                        $childHref = $routeExists ? "href=\"{$childActualUrl}\"" : '';
+                                        $childOnclick = $routeExists ? '' : 'onclick="return false;"';
+                                    @endphp
 
-            <!-- Mobile Informasi Publik Menu -->
-            <div class="block">
-                <button onclick="toggleSubmenu('informasi')"
-                    class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 flex items-center justify-between">
-                    Informasi Publik
-                    <svg id="informasi-arrow" class="h-4 w-4 transition-transform duration-200" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                        </path>
-                    </svg>
-                </button>
-                <div id="informasi-submenu" class="hidden pl-6 space-y-1">
-                    <a href="{{ route('publik.i-regulasi.index') }}"
-                        class="block px-3 py-2 text-sm text-gray-600">Regulasi</a>
-                    <a href="{{ route('publik.i-publik.index') }}"
-                        class="block px-3 py-2 text-sm text-gray-600">Daftar Informasi Publik</a>
-                    <a href="{{ route('publik.i-dikecualikan.index') }}"
-                        class="block px-3 py-2 text-sm text-gray-600">Informasi Publik Dikecualikan</a>
-                    <a href="{{ route('publik.i-setiap-saat.index') }} class="block px-3 py-2 text-sm
-                        text-gray-600">Informasi Setiap Saat</a>
-                    <a href="{{ route('publik.i-berkala.index') }}"
-                        class="block px-3 py-2 text-sm text-gray-600">Informasi Berkala</a>
-                    <a href="{{ route('publik.i-serta-merta.index') }}"
-                        class="block px-3 py-2 text-sm text-gray-600">Informasi Serta-Merta</a>
-                </div>
-            </div>
+                                    <{{ $childTag }} {!! $childHref !!} {!! $childOnclick !!}
+                                        class="block px-3 py-2 text-sm {{ $childClass }} rounded"
+                                        {!! $childTitle !!}>
+                                        {{ $child->title }}
+                                        </{{ $childTag }}>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <!-- If parent has no active children, show as single item if it has a valid route -->
+                        @php
+                            $isActive = $menu->route_name ? request()->routeIs($menu->route_name) : false;
+                            $routeExists = $menu->route_name ? Route::has($menu->route_name) : false;
+                            $actualUrl = $routeExists ? $menu->actual_url : '#';
+                            $menuClass = $routeExists
+                                ? ($isActive
+                                    ? ''
+                                    : 'text-gray-700')
+                                : 'text-gray-400 cursor-not-allowed';
+                            $menuTitle = $routeExists ? '' : 'title="Menu tidak tersedia"';
+                            $menuTag = $routeExists ? 'a' : 'span';
+                            $menuHref = $routeExists ? "href=\"{$actualUrl}\"" : '';
+                            $menuOnclick = $routeExists ? '' : 'onclick="return false;"';
+                        @endphp
 
-            <!-- Mobile Layanan Informasi Menu -->
-            <div class="block">
-                <button onclick="toggleSubmenu('layanan')"
-                    class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 flex items-center justify-between">
-                    Layanan Informasi
-                    <svg id="layanan-arrow" class="h-4 w-4 transition-transform duration-200" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                        </path>
-                    </svg>
-                </button>
-                <div id="layanan-submenu" class="hidden pl-6 space-y-1">
-                    <a href="{{ 'publik.l-maklumat.index' }}" class="block px-3 py-2 text-sm text-gray-600">Maklumat
-                        Layanan</a>
-                    <a href="{{ route('publik.l-standar.index') }}"
-                        class="block px-3 py-2 text-sm text-gray-600">Standar Layanan</a>
-                    <a href="{{ route('publik.l-permohonan-informasi.index') }}"
-                        class="block px-3 py-2 text-sm text-gray-600">Permohonan Informasi</a>
-                    <a href="{{ route('publik.l-permohonan-keberatan.index') }}"
-                        class="block px-3 py-2 text-sm text-gray-600">Keberatan Informasi</a>
-                    <a href="{{ route('publik.l-permohonan-sengketa.index') }}"
-                        class="block px-3 py-2 text-sm text-gray-600">Penyelesaian Sengketa</a>
-                </div>
-            </div>
+                        <{{ $menuTag }} {!! $menuHref !!} {!! $menuOnclick !!}
+                            class="block px-3 py-2 rounded-md text-base font-medium {{ $menuClass }}"
+                            {!! $menuTitle !!}>
+                            {{ $menu->title }}
+                            </{{ $menuTag }}>
+                    @endif
+                @else
+                    <!-- Single Mobile Menu Item -->
+                    @php
+                        $isActive = $menu->route_name ? request()->routeIs($menu->route_name) : false;
+                        $routeExists = $menu->route_name ? Route::has($menu->route_name) : false;
+                        $actualUrl = $routeExists ? $menu->actual_url : '#';
+                        $menuClass = $routeExists
+                            ? ($isActive
+                                ? ''
+                                : 'text-gray-700')
+                            : 'text-gray-400 cursor-not-allowed';
+                        $menuTitle = $routeExists ? '' : 'title="Menu tidak tersedia"';
+                        $menuTag = $routeExists ? 'a' : 'span';
+                        $menuHref = $routeExists ? "href=\"{$actualUrl}\"" : '';
+                        $menuOnclick = $routeExists ? '' : 'onclick="return false;"';
+                    @endphp
 
-            <!-- Mobile Publikasi Menu -->
-            <div class="block">
-                <button onclick="toggleSubmenu('publikasi')"
-                    class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 flex items-center justify-between">
-                    Publikasi
-                    <svg id="publikasi-arrow" class="h-4 w-4 transition-transform duration-200" fill="none"
-                        stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                        </path>
-                    </svg>
-                </button>
-                <div id="publikasi-submenu" class="hidden pl-6 space-y-1">
-                    <a href="{{ route('publikasi.berita.index') }}"
-                        class="block px-3 py-2 text-sm text-gray-600">Berita</a>
-                    <a href="{{ route('publikasi.pengumuman.index') }}"
-                        class="block px-3 py-2 text-sm text-gray-600">Pengumuman</a>
-                </div>
-            </div>
+                    <{{ $menuTag }} {!! $menuHref !!} {!! $menuOnclick !!}
+                        class="block px-3 py-2 rounded-md text-base font-medium {{ $menuClass }}"
+                        {!! $menuTitle !!}>
+                        {{ $menu->title }}
+                        </{{ $menuTag }}>
+                @endif
+            @endforeach
 
+            <!-- Mobile Login Button -->
             <a href="{{ route('home.index') }}"
-                class="block px-3 py-2 rounded-md text-base font-medium text-gray-700">
+                class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-blue-50">
                 Login
             </a>
         </div>
@@ -313,12 +265,11 @@
         menu.classList.toggle('hidden');
     }
 
-    function toggleSubmenu(menuType) {
-        const submenu = document.getElementById(menuType + '-submenu');
-        const arrow = document.getElementById(menuType + '-arrow');
+    function toggleSubmenu(menuId) {
+        const submenu = document.getElementById(menuId + '-submenu');
+        const arrow = document.getElementById(menuId + '-arrow');
 
         submenu.classList.toggle('hidden');
         arrow.classList.toggle('rotate-180');
     }
 </script>
-

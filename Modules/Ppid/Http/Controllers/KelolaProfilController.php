@@ -28,16 +28,16 @@ class KelolaProfilController extends Controller
         $data = $request->validate([
             'nama_direktur' => 'required|string|max:255',
             'sambutan' => 'required|string',
-            'media' => 'nullable|image|mimes:jpg,jpeg,png',
+            'media' => 'nullable|url',
             'ppid' => 'nullable|string',
-            'foto_organisasi' => 'nullable|image|mimes:jpg,jpeg,png',
+            'foto_organisasi' => 'nullable|url',
             'tugas_fungsi' => 'nullable|string',
             'visi' => 'nullable|string',
             'misi' => 'nullable|string',
         ]);
-        if ($request->hasFile('foto_organisasi')) {
-            $data['foto_organisasi'] = $request->file('foto_organisasi')->store('profil', 'public');
-        }
+        // if ($request->hasFile('foto_organisasi')) {
+        //     $data['foto_organisasi'] = $request->file('foto_organisasi')->store('profil', 'public');
+        // }
         KelolaProfil::create($data);
         return redirect()->route('kelolaprofil.index')->with('success', 'Profil berhasil disimpan.');
     }
@@ -56,20 +56,20 @@ class KelolaProfilController extends Controller
         $data = $request->validate([
             'nama_direktur' => 'required|string|max:255',
             'sambutan' => 'required|string',
-            'media' => 'nullable|image|mimes:jpg,jpeg,png',
+            'media' => 'nullable|url',
             'ppid' => 'nullable|string',
-            'foto_organisasi' => 'nullable|image|mimes:jpg,jpeg,png',
+            'foto_organisasi' => 'nullable|url',
             'tugas_fungsi' => 'nullable|string',
             'visi' => 'nullable|string',
             'misi' => 'nullable|string',
         ]);
-        if ($request->hasFile('foto_organisasi')) {
-            $data['foto_organisasi'] = $request->file('foto_organisasi')->store('profil', 'public');
-        }
+        // if ($request->hasFile('foto_organisasi')) {
+        //     $data['foto_organisasi'] = $request->file('foto_organisasi')->store('profil', 'public');
+        // }
 
-        if ($request->hasFile('media')) {
-            $data['media'] = $request->file('media')->store('profil', 'public');
-        }
+        // if ($request->hasFile('media')) {
+        //     $data['media'] = $request->file('media')->store('profil', 'public');
+        // }
 
         $kelola_profil->update($data);
         return redirect()->route('kelolaprofil.index')->with('success', 'Profil berhasil diupdate.');

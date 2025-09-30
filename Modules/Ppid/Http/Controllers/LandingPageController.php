@@ -5,10 +5,12 @@ namespace Modules\Ppid\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 use Modules\Ppid\Entities\Berita;
 use Modules\Ppid\Entities\Datadokumen;
 use Modules\Ppid\Entities\DataInformasi;
 use Modules\Ppid\Entities\KelolaProfil;
+use Modules\Ppid\Entities\Menu;
 use Modules\Ppid\Entities\Pengumuman;
 
 class LandingPageController extends Controller
@@ -194,5 +196,176 @@ class LandingPageController extends Controller
     {
         $profil = KelolaProfil::findOrFail(1);
         return view('ppid::landing-page.pages.profil.profil-ppid', compact('profil'));
+    }
+
+    //
+    public function testMenuPage()
+    {
+        $menus = Menu::getHierarchical();
+
+        return view('ppid::test-menu', compact('menus'));
+    }
+
+    public function testMenu()
+    {
+        $menus = Menu::getHierarchical();
+
+        return response()->json([
+            'success' => true,
+            'menus' => $menus,
+            'menu_structure' => $this->formatMenuStructure($menus)
+        ]);
+    }
+
+    private function formatMenuStructure($menus)
+    {
+        $structure = [];
+
+        foreach ($menus as $menu) {
+            $item = [
+                'title' => $menu->title,
+                'type' => $menu->type,
+                'route_name' => $menu->route_name,
+                'url' => $menu->url,
+                'actual_url' => $menu->actual_url,
+                'order' => $menu->order,
+                'has_children' => $menu->has_children,
+            ];
+
+            if ($menu->children->isNotEmpty()) {
+                $item['children'] = $this->formatMenuStructure($menu->children);
+            }
+
+            $structure[] = $item;
+        }
+
+        return $structure;
+    }
+
+    //crud menu items
+    public function menuIndex()
+    {
+        $menus = Menu::getHierarchical();
+        return view('ppid::kelola-web.index', compact('menus'));
+    }
+
+    public function create()
+    {
+        $parentMenus = Menu::rootItems()->get();
+        $availableRoutes = $this->getAvailableRoutes();
+
+        return view('ppid::kelola-web.create', compact('parentMenus', 'availableRoutes'));
+    }
+
+    public function store(Request $request)
+    {
+        // dd($request->all());
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'route_name' => 'nullable:type,route|nullable|string',
+            'parent_id' => 'nullable|exists:menu_items,id',
+            'is_active' => 'boolean'
+        ]);
+
+        // Set order to last position
+        $maxOrder = Menu::max('order') ?? 0;
+        $validated['order'] = $maxOrder + 1;
+        $validated['is_active'] = $request->has('is_active');
+
+        Menu::create($validated);
+
+        return redirect()->route('admin.menus.index')
+            ->with('success', 'Menu berhasil ditambahkan');
+    }
+
+    public function show($id)
+    {
+        $menu = Menu::with('children')->findOrFail($id);
+        return view('ppid::kelola-web.show', compact('menu'));
+    }
+
+    public function edit($id)
+    {
+        $menu = Menu::findOrFail($id);
+        $parentMenus = Menu::rootItems()->where('id', '!=', $id)->get();
+        $availableRoutes = $this->getAvailableRoutes();
+
+        return view('ppid::kelola-web.edit', compact('menu', 'parentMenus', 'availableRoutes'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $menu = Menu::findOrFail($id);
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'route_name' => 'nullable:type,route|nullable|string',
+            'parent_id' => 'nullable|exists:menu_items,id',
+            'is_active' => 'boolean'
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+
+        $menu->update($validated);
+
+        return redirect()->route('admin.menus.index')
+            ->with('success', 'Menu berhasil diupdate');
+    }
+
+    public function destroy($id)
+    {
+        $menu = Menu::findOrFail($id);
+
+        $menu->children()->delete();
+        $menu->delete();
+
+        return redirect()->route('admin.menus.index')
+            ->with('success', 'Menu berhasil dihapus');
+    }
+
+    public function reorder(Request $request)
+    {
+        $menusData = $request->input('menus');
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($menusData as $menuData) {
+                Menu::where('id', $menuData['id'])->update([
+                    'order' => $menuData['order'],
+                    'parent_id' => $menuData['parent_id']
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Menu order updated successfully'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating menu order: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get all available Laravel route names
+     */
+    private function getAvailableRoutes()
+    {
+        return collect(Route::getRoutes()->getRoutesByName())
+            ->keys()
+            ->filter(function ($routeName) {
+                return !str_starts_with($routeName, 'debugbar.') &&
+                    !str_starts_with($routeName, 'ignition.') &&
+                    !str_starts_with($routeName, 'admin.');
+            })
+            ->values()
+            ->toArray();
     }
 }

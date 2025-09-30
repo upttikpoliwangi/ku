@@ -22,11 +22,16 @@
                         <textarea name="sambutan" id="sambutan" class="form-control" required>{{ old('sambutan', $kelola_profil->sambutan ?? '') }}</textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="media" class="form-label">Media (Foto/Video)</label>
-                        <input type="file" name="media" id="media" class="form-control" accept="image/*,video/*">
-                        @if (isset($kelola_profil) && $kelola_profil->media)
-                            <small>File saat ini: <a href="{{ asset('storage/' . $kelola_profil->media) }}"
-                                    target="_blank">Lihat Media</a></small>
+                        <label for="media" class="form-label">Link Embed Media (Foto/Video)</label>
+                        <input type="text" name="media" id="media" 
+                               class="form-control @error('media') is-invalid @enderror"
+                               placeholder="Contoh: https://www.youtube.com/embed/xxxx atau link gambar"
+                               value="{{ old('media', $kelola_profil->media ?? '') }}">
+                        @error('media')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        @if(isset($kelola_profil) && $kelola_profil->media)
+                            <small class="form-text text-muted">Link saat ini: <a href="{{ $kelola_profil->media }}" target="_blank">Lihat Media</a></small>
                         @endif
                     </div>
                     <div class="mb-3">
@@ -34,11 +39,16 @@
                         <textarea name="ppid" id="ppid" class="form-control">{{ old('ppid', $kelola_profil->ppid ?? '') }}</textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="foto_organisasi" class="form-label">Foto Organisasi</label>
-                        <input type="file" name="foto_organisasi" id="foto_organisasi" class="form-control">
-                        @if (isset($kelola_profil) && $kelola_profil->foto_organisasi)
-                            <small>File saat ini: <a href="{{ asset('storage/' . $kelola_profil->foto_organisasi) }}"
-                                    target="_blank">Lihat Foto</a></small>
+                        <label for="foto_organisasi" class="form-label">Link Embed Foto Organisasi</label>
+                        <input type="text" name="foto_organisasi" id="foto_organisasi" 
+                               class="form-control @error('foto_organisasi') is-invalid @enderror"
+                               placeholder="Contoh: https://www.youtube.com/embed/xxxx atau link gambar"
+                               value="{{ old('foto_organisasi', $kelola_profil->foto_organisasi ?? '') }}">
+                        @error('foto_organisasi')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        @if(isset($kelola_profil) && $kelola_profil->foto_organisasi)
+                            <small class="form-text text-muted">Link saat ini: <a href="{{ $kelola_profil->foto_organisasi }}" target="_blank">Lihat Foto</a></small>
                         @endif
                     </div>
                     <div class="mb-3">

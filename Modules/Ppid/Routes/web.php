@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Core\MenusController;
 use Illuminate\Support\Facades\Route;
+use Modules\Ppid\Http\Controllers\LandingPageController;
 use Modules\Ppid\Http\Controllers\SambutanController;
 use Modules\Ppid\Http\Controllers\PermohonaninformasiController;
 
@@ -15,6 +17,7 @@ use Modules\Ppid\Http\Controllers\PermohonaninformasiController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get("/", "LandingPageController@index")->name('home');
 Route::prefix("profil")->group(function () {
     Route::prefix("sambutan-direktur")->group(function () {
@@ -27,7 +30,9 @@ Route::prefix("profil")->group(function () {
         Route::get("/", "LandingPageController@visiMisiShow")->name('publik.p.visi-misi.index');
     });
 });
-
+Route::get("/test", function () {
+    return"oke";
+})->name('test');
 Route::prefix("informasi-publik")->group(function () {
     Route::prefix("regulasi")->group(function () {
         Route::get("/", "LandingPageController@regulasiIndex")->name('publik.i-regulasi.index');
@@ -79,7 +84,21 @@ Route::prefix("publikasi")->group(function () {
 });
 
 Route::group(['middleware' => ['auth', 'permission']], function () {
-    Route::prefix('ppid')->group(function() {
+    Route::prefix('ppid')->group(function () {
+
+        Route::prefix('kelola-web')->group(function () {
+            Route::prefix('menu')->group(function () {
+                Route::get('/', 'LandingPageController@menuIndex')->name('admin.menus.index');
+                Route::get('/create', 'LandingPageController@create')->name('admin.menus.create');
+                Route::post('/store', 'LandingPageController@store')->name('admin.menus.store');
+                Route::get('/{id}', 'LandingPageController@show')->name('admin.menus.show');
+                Route::get('/{id}/edit', 'LandingPageController@edit')->name('admin.menus.edit');
+                Route::put('/{id}/update', 'LandingPageController@update')->name('admin.menus.update');
+                Route::delete('/{id}/delete', 'LandingPageController@destroy')->name('admin.menus.destroy');
+                Route::post('/reorder', 'LandingPageController@reorder')->name('admin.menus.reorder');
+            });
+        });
+
         // Permohonan Informasi
         Route::prefix('pemohon')->group(function () {
             // Untuk pengguna
@@ -185,7 +204,7 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
             Route::delete('/{id}/delete', 'DataInformasiController@destroy')->name('datainformasi.destroy');
         });
         // Riwayat Permohonan
-        Route::prefix('riwayat')->group(function (){
+        Route::prefix('riwayat')->group(function () {
             Route::get('/', 'RiwayatpermohonanController@index')->name('riwayat.index');
         });
     });
