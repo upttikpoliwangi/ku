@@ -17,6 +17,13 @@
             <!-- Desktop Navigation -->
             <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-6">
+                    <a href="{{ route('beranda') }}"
+                        class="px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 {{ request()->routeIs('beranda') ? 'text-white' : 'text-gray-700 hover:text-white hover:bg-opacity-80' }}"
+                        style="{{ request()->routeIs('beranda') ? 'background-color: var(--primary-blue);' : '' }}"
+                        onmouseover="if(!this.classList.contains('text-white')) this.style.backgroundColor='var(--primary-blue)'"
+                        onmouseout="if(!this.classList.contains('text-white')) this.style.backgroundColor=''">
+                        Beranda
+                    </a>
                     @foreach ($menus->where('is_active', true) as $menu)
                         @if ($menu->has_children)
                             <!-- Filter active children only -->

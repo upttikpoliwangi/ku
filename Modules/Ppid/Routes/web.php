@@ -19,6 +19,7 @@ use Modules\Ppid\Http\Controllers\PermohonaninformasiController;
 */
 
 Route::get("/", "LandingPageController@index")->name('home');
+Route::get("/beranda", "LandingPageController@beranda")->name('beranda');
 Route::prefix("profil")->group(function () {
     Route::prefix("sambutan-direktur")->group(function () {
         Route::get("/", "LandingPageController@sambutanDirekturShow")->name('publik.p.direktur.index');

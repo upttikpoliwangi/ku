@@ -39,6 +39,11 @@ class LandingPageController extends Controller
         ]);
     }
 
+    public function beranda()
+    {
+        return view('ppid::landing-page.pages.beranda');
+    }
+
     public function beritaDetail($id)
     {
         $berita = Berita::findOrFail($id);
@@ -323,6 +328,7 @@ class LandingPageController extends Controller
             ->with('success', 'Menu berhasil dihapus');
     }
 
+    // untuk mengatur urutan menu
     public function reorder(Request $request)
     {
         $menusData = $request->input('menus');
