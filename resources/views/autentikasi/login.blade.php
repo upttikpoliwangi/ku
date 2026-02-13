@@ -46,7 +46,6 @@
     <!-- Custom CSS -->
     <link href="{{ asset('/assets/css/halamanAwal.css') }}" rel="stylesheet">
 
-
 </head>
 
 <body class="bg-default">
@@ -75,76 +74,80 @@
                 <div class="col-lg-4 col-md-7">
                     <div class="card bg-secondary mt-4 border-0 mb-0">
                         <div class="card-body">
-							@if (config('services.oauth_server.sso_enable'))
-								{{-- Login For SSO --}}
-								<div class="text-center mb-1">
-									<p>Silahkan klik login untuk masuk ke aplikasi</p>
-								</div>
-								
-								<form method="post">
-									<div class="text-center">
-										<a href="{{ url('/oauth/login')}}" type="submit" class="btn-login btn btn-primary w-100 my-4-5 rounded-sm">Login</a>
-										{{-- <a href="{{ url('/login-maba') }}" type="submit" hidden class="btn-login-maba btn btn-primary w-100 my-4-5 rounded-sm">Login</a>--}}
-									</div>
-								</form>
-							@else
-								<form action="{{ $login_url }}" method="post">
-									@csrf
+                            @if (config('services.oauth_server.sso_enable'))
+                                {{-- Login For SSO --}}
+                                <div class="text-center mb-1">
+                                    <p>Silahkan klik login untuk masuk ke aplikasi</p>
+                                </div>
+                                
+                                <form method="post">
+                                    <div class="text-center">
+                                        <a href="{{ url('/oauth/login')}}" type="submit" class="btn-login btn btn-primary w-100 my-4-5 rounded-sm">Login</a>
+                                        {{-- <a href="{{ url('/login-maba') }}" type="submit" hidden class="btn-login-maba btn btn-primary w-100 my-4-5 rounded-sm">Login</a>--}}
+                                    </div>
+                                </form>
+                            @else
+                                <form action="{{ $login_url }}" method="post">
+                                    @csrf
 
-									{{-- Email field --}}
-									<div class="input-group mb-3">
-										<input type="username" name="username" class="form-control @error('username') is-invalid @enderror"
-											value="{{ old('username') }}" placeholder="username" autofocus>
+                                    {{-- Email field --}}
+                                    <div class="input-group mb-3">
+                                        <input type="username" name="username" class="form-control @error('username') is-invalid @enderror"
+                                            value="{{ old('username') }}" placeholder="username" autofocus>
 
-										<div class="input-group-append">
-											<div class="input-group-text">
-												<span class="fas fa-user {{ config('adminlte.classes_auth_icon', '') }}"></span>
-											</div>
-										</div>
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <span class="fas fa-user {{ config('adminlte.classes_auth_icon', '') }}"></span>
+                                            </div>
+                                        </div>
 
-										
-									</div>
+                                        
+                                    </div>
 
-									{{-- Password field --}}
-									<div class="input-group mb-3">
-										<input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
-											placeholder="{{ __('adminlte::adminlte.password') }}">
+                                    {{-- Password field --}}
+                                    <div class="input-group mb-3">
+                                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+                                            placeholder="{{ __('adminlte::adminlte.password') }}">
 
-										<div class="input-group-append">
-											<div class="input-group-text">
-												<span class="fas fa-lock {{ config('adminlte.classes_auth_icon', '') }}"></span>
-											</div>
-										</div>
+                                        <div class="input-group-append">
+                                            <div class="input-group-text">
+                                                <span class="fas fa-lock {{ config('adminlte.classes_auth_icon', '') }}"></span>
+                                            </div>
+                                        </div>
 
-										@error('password')
-											<span class="invalid-feedback" role="alert">
-												<strong>{{ $message }}</strong>
-											</span>
-										@enderror
-									</div>
+                                        @error('password')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
 
-									{{-- Login field --}}
-									<div class="row">
-										<div class="col-7">
-											<div class="icheck-primary" title="{{ __('adminlte::adminlte.remember_me_hint') }}">
-												{{-- <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                    {{-- Login field --}}
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <div class="icheck-primary" title="{{ __('adminlte::adminlte.remember_me_hint') }}">
+                                                {{-- <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
 
-												<label for="remember">
-													Ingatkan Saya
-												</label> --}}
-											</div>
-										</div>
+                                                <label for="remember">
+                                                    Ingatkan Saya
+                                                </label> --}}
+                                            </div>
+                                        </div>
 
-										<div class="col-5">
-											<button type=submit class="btn btn-block btn-primary{{-- config('adminlte.classes_auth_btn','btn-flatbtn-danger') --}}">
-												
-												Masuk
-											</button>
-										</div>
-									</div>
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <button type=submit class="btn btn-block btn-primary">
+                                            Masuk
+                                        </button>
+                                    </div>
 
-								</form>
-							@endif
+                                    <div class="text-center mt-3">
+                                        <a href="{{ route('register.show') }}" class="btn btn-secondary btn-block">
+                                            Registrasi
+                                        </a>
+                                    </div>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -33,6 +33,7 @@ class User extends Authenticatable
 		'unit',
 		'staff',
         'status',
+		'role_aktif',
     ];
 
     /**

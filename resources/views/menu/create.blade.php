@@ -21,6 +21,15 @@
 					<form method="POST" action="">
 						@csrf
 						<div class="mb-3">
+                                <label for="name" class="form-label">Modul</label>
+                                <input value="{{ old('modul') }}" type="text" class="form-control  col-sm-8"
+                                    name="modul" placeholder="Modul" required>
+
+                                @if ($errors->has('modul'))
+                                    <span class="text-danger text-left">{{ $errors->first('modul') }}</span>
+                                @endif
+                            </div>
+						<div class="mb-3">
 							<label for="name" class="form-label">Nama</label>
 							<input value="{{ old('name') }}" 
 								type="text" 

@@ -1,0 +1,13 @@
+{
+    "name": "Ppid",
+    "alias": "ppid",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Ppid\\Providers\\PpidServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

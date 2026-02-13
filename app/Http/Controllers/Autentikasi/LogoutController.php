@@ -26,12 +26,12 @@ class LogoutController extends Controller
             ->where('user_id', $user->id)->delete();
 		if (config('services.oauth_server.sso_enable')){
 			if($user->status == 2){
-				return redirect('login');
+				return redirect('home');
 			}else{
 				return redirect('login');//return redirect('https://sso.poliwangi.ac.id/keluar');
 			}
 		}else{
-			return redirect('login');
+			return redirect()->route('home');
 		}
     }
 }

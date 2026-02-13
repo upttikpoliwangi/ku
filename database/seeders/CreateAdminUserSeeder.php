@@ -48,6 +48,8 @@ class CreateAdminUserSeeder extends Seeder
 		$role->syncPermissions($permissions);
 		$role = Role::create(['name' => 'operator']);
 		$role->syncPermissions($permissions);
+        $role = Role::create(['name' => 'masyarakat']);
+		$role->syncPermissions($permissions);
 		
     }
 }
